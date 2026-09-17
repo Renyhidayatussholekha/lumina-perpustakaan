@@ -23,11 +23,11 @@
 
     <!-- 1. Student Profile Card -->
     <div class="glass-card rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 border border-pink-500/20 relative overflow-hidden">
-        <div class="absolute -right-10 -top-10 w-64 h-64 bg-pink-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -right-10 -top-10 w-64 h-64 bg-pink-500/15 rounded-full blur-3xl pointer-events-none" aria-hidden="true" role="presentation"></div>
 
         <div class="flex items-center gap-5">
             <div class="relative">
-                <img src="{{ $student['avatar'] }}" alt="{{ $student['name'] }}" class="w-16 h-16 rounded-full bg-plum-850 border-2 border-pink-400 cover-shadow">
+                <img src="{{ $student['avatar'] }}" alt="{{ $student['name'] }}" class="w-16 h-16 rounded-full bg-plum-850 border-2 border-pink-400 cover-shadow" loading="lazy" decoding="async">
                 <span class="absolute -bottom-1 -right-1 px-1.5 py-0.2 bg-rose-500 text-white font-black text-[10px] rounded-full border border-plum-950 shadow">
                     Lv.{{ $student['level'] }}
                 </span>
@@ -208,7 +208,7 @@
                         <span class="font-bold text-slate-400 w-6 text-center text-base">
                             @if($row['rank'] === 1) 🥇 @elseif($row['rank'] === 2) 🥈 @elseif($row['rank'] === 3) 🥉 @else #{{ $row['rank'] }} @endif
                         </span>
-                        <img src="{{ $row['avatar'] }}" class="w-8 h-8 rounded-full bg-plum-850 border border-pink-400/30">
+                        <img src="{{ $row['avatar'] }}" alt="{{ $row['name'] }}" class="w-8 h-8 rounded-full bg-plum-850 border border-pink-400/30" loading="lazy" decoding="async">
                         <div>
                             <span class="text-white block font-semibold">
                                 {{ $row['name'] }}

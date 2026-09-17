@@ -18,5 +18,6 @@ Route::get('/gamifikasi', [LuminaController::class, 'gamification'])->name('lumi
 // API Endpoints untuk Interaksi Frontend Interaktif (SPA-like)
 Route::post('/api/matchmaker', [LuminaController::class, 'aiMatchmaker'])->name('lumina.api.matchmaker');
 Route::post('/api/roleplay-chat', [LuminaController::class, 'roleplayChat'])->name('lumina.api.roleplay');
+Route::post('/api/ai-summarize', [LuminaController::class, 'aiSummarize'])->name('lumina.api.summarize');
 Route::post('/api/diskusi', [LuminaController::class, 'storeDiscussion'])->name('lumina.api.discussion');
 Route::post('/api/claim-quest', [LuminaController::class, 'claimQuest'])->name('lumina.api.quest');

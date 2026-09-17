@@ -14,11 +14,17 @@
 
     <!-- Main Book Header Card -->
     <div class="glass-card rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 border border-pink-500/20 relative overflow-hidden">
-        <div class="absolute -right-16 -top-16 w-64 h-64 bg-pink-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -right-16 -top-16 w-64 h-64 bg-pink-500/15 rounded-full blur-3xl pointer-events-none" aria-hidden="true" role="presentation"></div>
 
-        <!-- Cover -->
+        <!-- Cover with Lazy Loading -->
         <div class="relative w-44 sm:w-52 aspect-[3/4] rounded-2xl overflow-hidden bg-plum-950 border border-pink-400/30 shrink-0 cover-shadow">
-            <img src="{{ $book->cover_url }}" alt="{{ $book->title }}" class="w-full h-full object-cover">
+            <img 
+                src="{{ $book->cover_url }}" 
+                alt="{{ $book->title }}" 
+                class="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
+            >
             <div class="absolute top-2.5 right-2.5 bg-plum-950/85 backdrop-blur px-2.5 py-1 rounded-full text-[10px] font-bold text-amber-400 border border-amber-400/30">
                 ★ {{ $book->rating }}
             </div>
@@ -27,9 +33,9 @@
         <!-- Info -->
         <div class="flex-1 space-y-4 text-left">
             <div>
-                <span class="px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/30 text-[10px] font-mono font-bold uppercase tracking-wider">
+                <a href="{{ route('lumina.index', ['kategori' => $book->category]) }}" class="px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-300 hover:bg-pink-500/30 border border-pink-500/30 text-[10px] font-mono font-bold uppercase tracking-wider inline-block transition">
                     🌸 {{ $book->category }}
-                </span>
+                </a>
                 <h1 class="font-display font-black text-2xl sm:text-3xl text-white mt-2 leading-tight">{{ $book->title }}</h1>
                 <p class="text-xs sm:text-sm text-slate-300 mt-1">Karya <strong class="text-pink-300">{{ $book->author }}</strong></p>
                 
@@ -42,25 +48,40 @@
                 </div>
             </div>
 
-            <!-- 3 AI Bite-sized Summary Points -->
-            <div class="p-4 rounded-2xl bg-plum-950/70 border border-pink-500/20 space-y-2 text-xs">
-                <span class="font-display font-bold text-pink-300 flex items-center gap-1.5 text-xs">
-                    <span>💡</span> 3 Inti Pokok Buku (Rangkuman AI Lumina):
-                </span>
-                <ul class="text-xs text-slate-300 space-y-2 pl-1">
+            <!-- 3 AI Bite-sized Summary Points with Live AI Re-Generation -->
+            <div class="p-4 rounded-2xl bg-plum-950/70 border border-pink-500/20 space-y-3 text-xs relative" id="aiSummaryBox">
+                <div class="flex items-center justify-between border-b border-pink-500/15 pb-2">
+                    <span class="font-display font-bold text-pink-300 flex items-center gap-1.5 text-xs">
+                        <span>💡</span> 3 Inti Pokok Buku (Rangkuman AI Lumina):
+                    </span>
+                    <button 
+                        type="button" 
+                        onclick="generateFreshAiSummary({{ $book->id }})" 
+                        id="genAiBtn" 
+                        class="text-[10px] font-bold text-pink-300 hover:text-white bg-pink-500/20 hover:bg-pink-500/35 px-2.5 py-1 rounded-xl border border-pink-500/30 transition flex items-center gap-1 shadow-sm"
+                        title="Minta AI meracik perspektif baru dari buku ini"
+                    >
+                        <span>✨</span>
+                        <span id="genAiBtnText">Analisis AI Baru</span>
+                    </button>
+                </div>
+                <ul class="text-xs text-slate-300 space-y-2 pl-1" id="aiSummaryList">
                     <li class="flex items-start gap-2">
                         <span class="text-pink-400 font-bold">•</span>
-                        <span>{{ $book->ai_summary_1 }}</span>
+                        <span id="summaryPoint1">{{ $book->ai_summary_1 }}</span>
                     </li>
                     <li class="flex items-start gap-2">
                         <span class="text-pink-400 font-bold">•</span>
-                        <span>{{ $book->ai_summary_2 }}</span>
+                        <span id="summaryPoint2">{{ $book->ai_summary_2 }}</span>
                     </li>
                     <li class="flex items-start gap-2">
                         <span class="text-pink-400 font-bold">•</span>
-                        <span>{{ $book->ai_summary_3 }}</span>
+                        <span id="summaryPoint3">{{ $book->ai_summary_3 }}</span>
                     </li>
                 </ul>
+                <div id="aiSourceBadge" class="text-[10px] text-pink-400/70 italic pt-1 border-t border-white/5">
+                    Model: Lumina Neural Library AI v2.4 (Terhubung)
+                </div>
             </div>
 
             <!-- Action Buttons -->
@@ -135,7 +156,13 @@
             <div class="p-4 rounded-2xl border border-pink-500/15 bg-plum-900/60 space-y-2">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2.5">
-                        <img src="{{ $disc->user_avatar }}" class="w-7 h-7 rounded-full bg-plum-800 border border-pink-400/40">
+                        <img 
+                            src="{{ $disc->user_avatar }}" 
+                            alt="{{ $disc->user_name }}" 
+                            class="w-7 h-7 rounded-full bg-plum-800 border border-pink-400/40"
+                            loading="lazy"
+                            decoding="async"
+                        >
                         <span class="font-bold text-xs text-white">{{ $disc->user_name }}</span>
                         <span class="text-[10px] text-pink-300 font-mono">• {{ $disc->user_house }}</span>
                     </div>
@@ -152,6 +179,43 @@
 </div>
 
 <script>
+    // Real-time Dynamic AI Summarization
+    async function generateFreshAiSummary(bookId) {
+        const btn = document.getElementById('genAiBtn');
+        const textSpan = document.getElementById('genAiBtnText');
+        btn.disabled = true;
+        textSpan.textContent = 'Menganalisis AI...';
+
+        try {
+            const res = await fetch('{{ route("lumina.api.summarize") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+                body: JSON.stringify({ book_id: bookId })
+            });
+            const data = await res.json();
+
+            if (data.status === 'success') {
+                document.getElementById('summaryPoint1').textContent = data.summary_1;
+                document.getElementById('summaryPoint2').textContent = data.summary_2;
+                document.getElementById('summaryPoint3').textContent = data.summary_3;
+                
+                const badge = document.getElementById('aiSourceBadge');
+                if (badge) {
+                    badge.textContent = 'Model: ' + data.source + ' (Baru saja diperbarui ✨)';
+                    badge.classList.add('text-pink-300', 'font-bold');
+                }
+
+                showToast('AI Berhasil!', 'Rangkuman baru berhasil diracik oleh AI');
+            }
+        } catch (e) {
+            console.error(e);
+            showToast('Info AI', 'Menggunakan analisis kontekstual Lumina');
+        } finally {
+            btn.disabled = false;
+            textSpan.textContent = 'Analisis AI Baru';
+        }
+    }
+
     async function submitBookDiscussion(bookId) {
         const input = document.getElementById('discussionCommentInput');
         const text = input.value.trim();
@@ -174,7 +238,7 @@
             card.innerHTML = `
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2.5">
-                        <img src="${data.discussion.user_avatar}" class="w-7 h-7 rounded-full bg-plum-800 border border-pink-400">
+                        <img src="${data.discussion.user_avatar}" alt="${data.discussion.user_name}" class="w-7 h-7 rounded-full bg-plum-800 border border-pink-400" loading="lazy" decoding="async">
                         <span class="font-bold text-xs text-white">${data.discussion.user_name}</span>
                         <span class="text-[10px] text-pink-300 font-mono">• ${data.discussion.user_house}</span>
                     </div>

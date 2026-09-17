@@ -82,8 +82,20 @@
     <header class="sticky top-0 z-50 bg-plum-950/85 backdrop-blur-xl border-b border-pink-500/10">
         <div class="max-w-6xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2 sm:gap-4">
             
-            <!-- Brand Logo -->
-            <div class="flex items-center gap-3 sm:gap-6 shrink-0">
+            <!-- Brand Logo & Mobile Hamburger -->
+            <div class="flex items-center gap-2 sm:gap-6 shrink-0">
+                <!-- Hamburger Button (Mobile) -->
+                <button 
+                    onclick="toggleMobileDrawer()" 
+                    id="mobileDrawerBtn" 
+                    class="sm:hidden p-2 rounded-xl bg-plum-900 border border-pink-500/20 text-pink-300 hover:text-white transition focus:outline-none"
+                    aria-label="Buka Menu Navigasi"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+
                 <a href="{{ route('lumina.index') }}" class="flex items-center gap-2 group">
                     <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-pink-500 via-rose-500 to-pink-400 flex items-center justify-center text-white text-sm font-black shadow-md shadow-pink-500/30 group-hover:scale-105 transition">
                         🌸
@@ -102,27 +114,73 @@
                 </nav>
             </div>
 
-            <!-- Search Bar & Clean Profile -->
+            <!-- Functional Search Form & Profile -->
             <div class="flex items-center gap-2 sm:gap-3 flex-1 sm:flex-none justify-end">
-                <div class="relative w-full max-w-[170px] sm:max-w-none sm:w-60">
+                <form id="globalSearchForm" action="{{ route('lumina.index') }}" method="GET" class="relative w-full max-w-[170px] sm:max-w-none sm:w-64">
                     <input 
-                        type="text" 
+                        type="search" 
+                        name="q"
                         id="globalSearchInput" 
-                        placeholder="Cari buku..." 
-                        class="w-full bg-plum-900 border border-pink-500/20 rounded-full px-3 py-1.5 pl-8 text-xs text-slate-200 placeholder-pink-300/40 focus:outline-none focus:border-pink-400 transition"
-                        onkeyup="handleGlobalSearch(event)"
+                        value="{{ request('q') }}"
+                        placeholder="Cari buku / tokoh..." 
+                        class="w-full bg-plum-900 border border-pink-500/20 rounded-full px-3 py-1.5 pl-8 pr-6 text-xs text-slate-200 placeholder-pink-300/40 focus:outline-none focus:border-pink-400 transition"
+                        onkeyup="handleGlobalLiveSearch(event)"
+                        autocomplete="off"
                     >
-                    <span class="absolute left-2.5 top-2 text-pink-400 text-xs">🔍</span>
-                </div>
+                    <button type="submit" class="absolute left-2.5 top-2 text-pink-400 text-xs hover:scale-110 transition" title="Mulai Cari">
+                        🔍
+                    </button>
+                    <button 
+                        type="button" 
+                        id="clearSearchBtn" 
+                        onclick="clearSearchInput()" 
+                        class="absolute right-2.5 top-2 text-pink-300/60 hover:text-white text-xs {{ request('q') ? '' : 'hidden' }}"
+                        title="Bersihkan Pencarian"
+                    >
+                        ✕
+                    </button>
+                </form>
 
                 <!-- Clean User Avatar with Level -->
                 <a href="{{ route('lumina.gamification') }}" class="flex items-center gap-2 pl-2 border-l border-white/10 hover:opacity-85 transition shrink-0" title="Profil Siswa">
                     <div class="relative">
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Rayhan" alt="Rayhan" class="w-8 h-8 rounded-full bg-plum-850 border border-pink-400/50">
+                        <img 
+                            src="https://api.dicebear.com/7.x/avataaars/svg?seed=Rayhan" 
+                            alt="Rayhan Alfarizi" 
+                            class="w-8 h-8 rounded-full bg-plum-850 border border-pink-400/50"
+                            loading="lazy"
+                            decoding="async"
+                        >
                         <span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-rose-500 text-white font-black text-[9px] rounded-full flex items-center justify-center shadow">5</span>
                     </div>
                     <span class="text-xs font-semibold text-pink-200 hidden md:inline">Rayhan</span>
                 </a>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Menu (Sliding from top when Hamburger clicked) -->
+        <div id="mobileDrawerMenu" class="sm:hidden hidden border-t border-pink-500/15 bg-plum-950/98 backdrop-blur-2xl px-4 py-4 space-y-3 transition-all duration-200">
+            <div class="space-y-1 text-xs font-medium">
+                <a href="{{ route('lumina.index') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl bg-plum-900 border border-pink-500/20 text-white font-bold">
+                    <span class="flex items-center gap-2">📚 <span>Katalog Rak Buku</span></span>
+                    <span class="text-pink-400">→</span>
+                </a>
+                <a href="{{ route('lumina.gamification') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/5">
+                    <span class="flex items-center gap-2">🏆 <span>Piala & Fraksi Sekolah</span></span>
+                    <span class="text-slate-400">→</span>
+                </a>
+                <button onclick="toggleMobileDrawer(); switchTab('ai');" class="w-full text-left flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/5">
+                    <span class="flex items-center gap-2">🤖 <span>AI Matchmaker & Tokoh</span></span>
+                    <span class="text-slate-400">→</span>
+                </button>
+            </div>
+
+            <!-- Profile Info in Mobile Drawer -->
+            <div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-slate-300">
+                <div class="flex items-center gap-2">
+                    <span>👑 Rayhan Alfarizi (Level 5)</span>
+                </div>
+                <span class="font-bold text-pink-400 font-mono">1.450 XP</span>
             </div>
         </div>
     </header>
@@ -156,7 +214,7 @@
     <div id="globalAudioPlayer" class="fixed bottom-20 sm:bottom-4 left-1/2 -translate-x-1/2 w-[94%] max-w-xl z-50 hidden transition-all duration-300">
         <div class="bg-plum-900/95 backdrop-blur-xl border border-pink-500/30 rounded-2xl p-3 sm:p-3.5 shadow-2xl shadow-pink-950/60 flex items-center justify-between gap-3 text-white">
             <div class="flex items-center gap-3 min-w-0">
-                <img id="audioPlayerCover" src="" class="w-10 h-10 rounded-lg object-cover bg-plum-800 shrink-0 border border-pink-400/30">
+                <img id="audioPlayerCover" src="" alt="Cover Audiobook" class="w-10 h-10 rounded-lg object-cover bg-plum-800 shrink-0 border border-pink-400/30" loading="lazy" decoding="async">
                 <div class="min-w-0">
                     <h4 id="audioPlayerTitle" class="text-xs sm:text-sm font-bold text-white truncate">Judul Buku</h4>
                     <p id="audioPlayerAuthor" class="text-[11px] text-pink-300 truncate">Penulis</p>
@@ -168,10 +226,10 @@
                 <button onclick="cycleAudioSpeed()" id="audioSpeedBtn" class="px-2 py-1 rounded bg-plum-800 text-[10px] font-bold text-pink-300 hover:bg-plum-700 transition">
                     1.0x
                 </button>
-                <button onclick="toggleAudioSpeech()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-tr from-pink-500 to-rose-500 text-white flex items-center justify-center font-bold text-xs sm:text-sm shadow hover:scale-105 transition">
+                <button onclick="toggleAudioSpeech()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-tr from-pink-500 to-rose-500 text-white flex items-center justify-center font-bold text-xs sm:text-sm shadow hover:scale-105 transition" aria-label="Putar / Jeda Audio">
                     <span id="audioPlayIcon">▶</span>
                 </button>
-                <button onclick="closeAudioPlayer()" class="text-pink-300/60 hover:text-white p-1 text-xs transition">
+                <button onclick="closeAudioPlayer()" class="text-pink-300/60 hover:text-white p-1 text-xs transition" aria-label="Tutup Player">
                     ✕
                 </button>
             </div>
@@ -268,17 +326,62 @@
             document.getElementById('globalAudioPlayer').classList.add('hidden');
         }
 
-        function handleGlobalSearch(e) {
-            const q = e.target.value.toLowerCase();
+        // Hamburger Drawer Toggle
+        function toggleMobileDrawer() {
+            const drawer = document.getElementById('mobileDrawerMenu');
+            if (drawer) {
+                drawer.classList.toggle('hidden');
+            }
+        }
+
+        // Live Real-time & Form Search
+        function handleGlobalLiveSearch(e) {
+            const q = e.target.value.toLowerCase().trim();
+            const clearBtn = document.getElementById('clearSearchBtn');
+            if (clearBtn) {
+                if (q.length > 0) {
+                    clearBtn.classList.remove('hidden');
+                } else {
+                    clearBtn.classList.add('hidden');
+                }
+            }
+
+            let foundCount = 0;
             document.querySelectorAll('.book-card').forEach(card => {
                 const title = (card.getAttribute('data-title') || '').toLowerCase();
                 const author = (card.getAttribute('data-author') || '').toLowerCase();
-                if (title.includes(q) || author.includes(q)) {
+                const category = (card.getAttribute('data-category') || '').toLowerCase();
+                if (title.includes(q) || author.includes(q) || category.includes(q)) {
                     card.style.display = '';
+                    foundCount++;
                 } else {
                     card.style.display = 'none';
                 }
             });
+
+            // Toggle No Results Placeholder
+            const noResults = document.getElementById('noBooksFoundState');
+            if (noResults) {
+                if (foundCount === 0 && q.length > 0) {
+                    noResults.classList.remove('hidden');
+                    const qDisplay = document.getElementById('searchQueryDisplay');
+                    if (qDisplay) qDisplay.textContent = q;
+                } else {
+                    noResults.classList.add('hidden');
+                }
+            }
+        }
+
+        function clearSearchInput() {
+            const input = document.getElementById('globalSearchInput');
+            if (input) {
+                input.value = '';
+                const clearBtn = document.getElementById('clearSearchBtn');
+                if (clearBtn) clearBtn.classList.add('hidden');
+                document.querySelectorAll('.book-card').forEach(card => card.style.display = '');
+                const noResults = document.getElementById('noBooksFoundState');
+                if (noResults) noResults.classList.add('hidden');
+            }
         }
     </script>
 </body>

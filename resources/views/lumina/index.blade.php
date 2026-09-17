@@ -9,16 +9,22 @@
     <!-- 1. CINEMATIC HERO SPOTLIGHT (RESPONSIVE STREAMING)   -->
     <!-- ==================================================== -->
     <div class="relative rounded-3xl overflow-hidden border border-pink-500/20 bg-gradient-to-br from-plum-900 via-plum-850 to-plum-950 p-5 sm:p-10 shadow-2xl">
-        <!-- Soft Pink Ambient Glow behind featured cover -->
-        <div class="absolute -right-10 -top-10 w-96 h-96 bg-pink-500/15 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -left-10 -bottom-10 w-80 h-80 bg-rose-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        <!-- Soft Pink Ambient Glow (Aria Hidden) -->
+        <div class="absolute -right-10 -top-10 w-96 h-96 bg-pink-500/15 rounded-full blur-3xl pointer-events-none" aria-hidden="true" role="presentation"></div>
+        <div class="absolute -left-10 -bottom-10 w-80 h-80 bg-rose-600/10 rounded-full blur-3xl pointer-events-none" aria-hidden="true" role="presentation"></div>
 
         <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
             <!-- Mobile Featured Cover (visible on phone, hidden on desktop) -->
             <div class="relative shrink-0 md:hidden group mx-auto">
-                <div class="absolute -inset-2 bg-gradient-to-tr from-pink-500/30 to-rose-500/30 rounded-2xl blur-lg transition duration-500"></div>
+                <div class="absolute -inset-2 bg-gradient-to-tr from-pink-500/30 to-rose-500/30 rounded-2xl blur-lg transition duration-500" aria-hidden="true" role="presentation"></div>
                 <div class="relative w-36 aspect-[3/4] rounded-2xl overflow-hidden border border-pink-400/30 cover-shadow">
-                    <img src="{{ $featuredBook->cover_url }}" alt="{{ $featuredBook->title }}" class="w-full h-full object-cover">
+                    <img 
+                        src="{{ $featuredBook->cover_url }}" 
+                        alt="{{ $featuredBook->title }}" 
+                        class="w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                    >
                     <div class="absolute top-2 right-2 bg-plum-950/85 backdrop-blur px-2 py-0.5 rounded-full text-[10px] font-bold text-amber-400 border border-amber-400/30">
                         ★ {{ $featuredBook->rating }}
                     </div>
@@ -29,10 +35,12 @@
             <div class="max-w-xl space-y-3 sm:space-y-4 text-left">
                 <div class="flex items-center gap-2">
                     <span class="px-3 py-1 rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/30 text-xs font-bold font-mono uppercase tracking-wider flex items-center gap-1.5 shadow-sm shadow-pink-500/10">
-                        <span class="w-2 h-2 rounded-full bg-pink-400 animate-pulse"></span>
+                        <span class="w-2 h-2 rounded-full bg-pink-400 animate-pulse" aria-hidden="true"></span>
                         🌸 Buku Pilihan Pekan Ini
                     </span>
-                    <span class="text-xs text-pink-200/60">{{ $featuredBook->category }}</span>
+                    <button type="button" onclick="filterCategory('{{ $featuredBook->category }}')" class="text-xs text-pink-200/80 hover:text-pink-300 hover:underline transition">
+                        {{ $featuredBook->category }}
+                    </button>
                 </div>
 
                 <h1 class="font-display font-extrabold text-2xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-tight">
@@ -80,9 +88,15 @@
 
             <!-- Right 3D Book Cover Presentation (Desktop) -->
             <div class="relative shrink-0 hidden md:block group">
-                <div class="absolute -inset-2 bg-gradient-to-tr from-pink-500/30 to-rose-500/30 rounded-2xl blur-xl group-hover:blur-2xl transition duration-500"></div>
+                <div class="absolute -inset-2 bg-gradient-to-tr from-pink-500/30 to-rose-500/30 rounded-2xl blur-xl group-hover:blur-2xl transition duration-500" aria-hidden="true" role="presentation"></div>
                 <div class="relative w-48 lg:w-56 aspect-[3/4] rounded-2xl overflow-hidden border border-pink-400/30 cover-shadow transform group-hover:-translate-y-2 transition duration-300">
-                    <img src="{{ $featuredBook->cover_url }}" alt="{{ $featuredBook->title }}" class="w-full h-full object-cover">
+                    <img 
+                        src="{{ $featuredBook->cover_url }}" 
+                        alt="{{ $featuredBook->title }}" 
+                        class="w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                    >
                     <div class="absolute top-2.5 right-2.5 bg-plum-950/80 backdrop-blur px-2.5 py-1 rounded-full text-[10px] font-bold text-amber-400 border border-amber-400/30">
                         ★ {{ $featuredBook->rating }}
                     </div>
@@ -121,60 +135,81 @@
     <!-- ========================================== -->
     <div id="tabContent-katalog" class="tab-content space-y-8">
         
-        <!-- Genre Filter Chips -->
-        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-            <button onclick="filterCategory('all', this)" class="cat-pill px-3.5 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-pink-500 to-rose-500 text-white transition shrink-0 shadow-sm shadow-pink-500/25">
+        <!-- Genre Filter Chips (Dynamic from Database) -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="categoryChipsBar">
+            <button onclick="filterCategory('all', this)" class="cat-pill px-3.5 py-1.5 rounded-full text-xs font-bold {{ ($selectedCategory ?? 'all') === 'all' ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-sm shadow-pink-500/25' : 'bg-plum-900 border border-pink-500/20 text-slate-300 hover:text-pink-200 hover:bg-plum-800' }} transition shrink-0">
                 ✨ Semua Koleksi ({{ $allBooks->count() }})
             </button>
-            <button onclick="filterCategory('Sejarah', this)" class="cat-pill px-3.5 py-1.5 rounded-full text-xs font-semibold bg-plum-900 border border-pink-500/20 text-slate-300 hover:text-pink-200 hover:bg-plum-800 transition shrink-0">
-                🏛️ Sejarah & Tokoh
+            @foreach($categories as $cat)
+            <button onclick="filterCategory('{{ $cat }}', this)" class="cat-pill px-3.5 py-1.5 rounded-full text-xs font-semibold {{ ($selectedCategory ?? '') === $cat ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-sm shadow-pink-500/25' : 'bg-plum-900 border border-pink-500/20 text-slate-300 hover:text-pink-200 hover:bg-plum-800' }} transition shrink-0">
+                {{ $cat }}
             </button>
-            <button onclick="filterCategory('Sastra', this)" class="cat-pill px-3.5 py-1.5 rounded-full text-xs font-semibold bg-plum-900 border border-pink-500/20 text-slate-300 hover:text-pink-200 hover:bg-plum-800 transition shrink-0">
-                📖 Sastra & Fiksi
-            </button>
-            <button onclick="filterCategory('Sains', this)" class="cat-pill px-3.5 py-1.5 rounded-full text-xs font-semibold bg-plum-900 border border-pink-500/20 text-slate-300 hover:text-pink-200 hover:bg-plum-800 transition shrink-0">
-                🔭 Sains & Teknologi
-            </button>
-            <button onclick="filterCategory('Pengembangan', this)" class="cat-pill px-3.5 py-1.5 rounded-full text-xs font-semibold bg-plum-900 border border-pink-500/20 text-slate-300 hover:text-pink-200 hover:bg-plum-800 transition shrink-0">
-                🌿 Stoisisme & Jiwa
-            </button>
-            <button onclick="filterCategory('Lingkungan', this)" class="cat-pill px-3.5 py-1.5 rounded-full text-xs font-semibold bg-plum-900 border border-pink-500/20 text-slate-300 hover:text-pink-200 hover:bg-plum-800 transition shrink-0">
-                🍃 Lingkungan Hidup
+            @endforeach
+        </div>
+
+        <!-- Empty Search State -->
+        <div id="noBooksFoundState" class="hidden py-12 text-center space-y-3 glass-card rounded-3xl border border-pink-500/20 p-8">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-pink-500/20 text-pink-300 flex items-center justify-center text-2xl" aria-hidden="true">
+                🔍
+            </div>
+            <h4 class="font-display font-bold text-base text-white">Buku Tidak Ditemukan</h4>
+            <p class="text-xs text-slate-400 max-w-md mx-auto">
+                Tidak ada buku yang cocok dengan pencarian "<span id="searchQueryDisplay" class="text-pink-300 font-bold"></span>".
+            </p>
+            <button type="button" onclick="clearSearchInput(); filterCategory('all');" class="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold text-xs shadow transition">
+                Tampilkan Semua Koleksi
             </button>
         </div>
 
         <!-- 4-Column Book Grid with Visual Depth (Responsive 2-col on mobile, 3-col on tablet, 4-col on laptop) -->
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5" id="booksGrid">
-            @foreach($allBooks as $book)
+            @foreach($allBooks as $index => $book)
             <div 
-                class="book-card group cursor-pointer flex flex-col justify-between p-2.5 sm:p-3 rounded-2xl glass-card border border-pink-500/15 hover:border-pink-400/60"
+                class="book-card group cursor-pointer flex flex-col justify-between p-2.5 sm:p-3 rounded-2xl glass-card border border-pink-500/15 hover:border-pink-400/60 {{ $index >= 6 ? 'extra-book hidden' : '' }}"
                 data-title="{{ $book->title }}"
                 data-author="{{ $book->author }}"
                 data-category="{{ $book->category }}"
             >
-                <a href="{{ route('lumina.book', $book->id) }}" class="block">
+                <div class="block">
                     <!-- Book Cover -->
-                    <div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-plum-950 border border-pink-500/20 group-hover:shadow-xl transition duration-300">
-                        <img src="{{ $book->cover_url }}" alt="{{ $book->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                        
-                        <!-- Rating & Duration Tags -->
-                        <div class="absolute top-2 left-2 bg-plum-950/85 backdrop-blur px-2 py-0.5 rounded-md text-[10px] font-bold text-amber-400 border border-amber-400/20">
-                            ★ {{ $book->rating }}
+                    <a href="{{ route('lumina.book', $book->id) }}" class="block">
+                        <div class="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-plum-950 border border-pink-500/20 group-hover:shadow-xl transition duration-300">
+                            <img 
+                                src="{{ $book->cover_url }}" 
+                                alt="{{ $book->title }}" 
+                                class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                                loading="lazy"
+                                decoding="async"
+                            >
+                            
+                            <!-- Rating & Duration Tags -->
+                            <div class="absolute top-2 left-2 bg-plum-950/85 backdrop-blur px-2 py-0.5 rounded-md text-[10px] font-bold text-amber-400 border border-amber-400/20">
+                                ★ {{ $book->rating }}
+                            </div>
+                            <div class="absolute top-2 right-2 bg-plum-950/85 backdrop-blur px-2 py-0.5 rounded-md text-[10px] font-bold text-pink-300 border border-pink-400/20">
+                                {{ $book->reading_time_minutes }}m
+                            </div>
                         </div>
-                        <div class="absolute top-2 right-2 bg-plum-950/85 backdrop-blur px-2 py-0.5 rounded-md text-[10px] font-bold text-pink-300 border border-pink-400/20">
-                            {{ $book->reading_time_minutes }}m
-                        </div>
-                    </div>
+                    </a>
 
-                    <!-- Clean Typography -->
+                    <!-- Clean Typography with Clickable Dynamic Category -->
                     <div class="pt-2.5 sm:pt-3 space-y-1 text-left">
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-pink-400 block line-clamp-1">{{ $book->category }}</span>
-                        <h4 class="font-display font-bold text-xs sm:text-sm text-white group-hover:text-pink-300 transition line-clamp-1 leading-snug">
-                            {{ $book->title }}
-                        </h4>
+                        <button 
+                            type="button" 
+                            onclick="filterCategory('{{ $book->category }}')" 
+                            class="text-[10px] font-bold uppercase tracking-wider text-pink-400 hover:text-pink-300 transition block line-clamp-1 text-left cursor-pointer"
+                            title="Filter kategori ini"
+                        >
+                            {{ $book->category }}
+                        </button>
+                        <a href="{{ route('lumina.book', $book->id) }}">
+                            <h4 class="font-display font-bold text-xs sm:text-sm text-white group-hover:text-pink-300 transition line-clamp-1 leading-snug">
+                                {{ $book->title }}
+                            </h4>
+                        </a>
                         <p class="text-[11px] sm:text-xs text-slate-400 truncate">{{ $book->author }}</p>
                     </div>
-                </a>
+                </div>
 
                 <!-- Quick Action Bar -->
                 <div class="flex items-center gap-1.5 sm:gap-2 pt-2 sm:pt-3 mt-2 border-t border-white/5">
@@ -185,16 +220,32 @@
                         onclick="startAudiobook('{{ addslashes($book->title) }}', '{{ addslashes($book->author) }}', '{{ $book->cover_url }}', '{{ addslashes($book->audio_text) }}')" 
                         class="p-2 rounded-xl bg-white/10 hover:bg-plum-800 text-pink-200 text-xs transition"
                         title="Dengar Audiobook"
+                        aria-label="Dengar Audiobook"
                     >
                         🎧
                     </button>
-                    <a href="{{ route('lumina.book', $book->id) }}" class="p-2 rounded-xl bg-white/10 hover:bg-plum-800 text-pink-200 text-xs transition" title="Detail">
+                    <a href="{{ route('lumina.book', $book->id) }}" class="p-2 rounded-xl bg-white/10 hover:bg-plum-800 text-pink-200 text-xs transition" title="Detail Buku" aria-label="Detail Buku">
                         ℹ️
                     </a>
                 </div>
             </div>
             @endforeach
         </div>
+
+        <!-- Load More / Paginasi Interaktif -->
+        @if($allBooks->count() > 6)
+        <div class="pt-4 text-center" id="loadMoreContainer">
+            <button 
+                type="button" 
+                onclick="loadMoreBooks()" 
+                id="loadMoreBtn" 
+                class="px-6 py-3 rounded-2xl bg-plum-900 hover:bg-plum-850 border border-pink-500/30 text-pink-200 hover:text-white font-bold text-xs sm:text-sm shadow-lg shadow-pink-950/50 hover:shadow-pink-500/10 transition inline-flex items-center gap-2 group"
+            >
+                <span>🌸 Muat Lebih Banyak Koleksi</span>
+                <span class="px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-300 text-[11px] font-mono" id="loadMoreRemaining">+{{ $allBooks->count() - 6 }}</span>
+            </button>
+        </div>
+        @endif
     </div>
 
     <!-- ========================================== -->
@@ -315,7 +366,7 @@
             <!-- Chat Window -->
             <div class="border border-pink-500/20 rounded-2xl overflow-hidden bg-plum-950/70">
                 <div class="p-4 bg-plum-900 border-b border-pink-500/15 flex items-center gap-3">
-                    <img id="activeCharAvatar" src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=120&q=80" class="w-10 h-10 rounded-xl object-cover border border-pink-400/40">
+                    <img id="activeCharAvatar" src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=120&q=80" alt="Avatar Karakter" class="w-10 h-10 rounded-xl object-cover border border-pink-400/40" loading="lazy" decoding="async">
                     <div>
                         <h4 id="activeCharName" class="font-bold text-sm text-white">Ir. Soekarno (Bung Karno)</h4>
                         <p id="activeCharRole" class="text-xs text-pink-300/80">Proklamator & Presiden RI Pertama</p>
@@ -394,7 +445,7 @@
                 <div class="py-3 flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <span class="text-xl">🥇</span>
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Siti" class="w-8 h-8 rounded-full bg-plum-800 border border-slate-700">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Siti" alt="Siti Nurhaliza" class="w-8 h-8 rounded-full bg-plum-800 border border-slate-700" loading="lazy" decoding="async">
                         <div>
                             <span class="font-bold text-white block">Siti Nurhaliza</span>
                             <span class="text-[11px] text-slate-400">12 IPS 1 • 🐉 Komodo Wira</span>
@@ -406,7 +457,13 @@
                 <div class="py-3 flex items-center justify-between bg-pink-500/10 -mx-6 px-6 border-l-4 border-pink-400">
                     <div class="flex items-center gap-3">
                         <span class="text-xl">🥈</span>
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Rayhan" class="w-8 h-8 rounded-full bg-plum-800 border border-pink-400">
+                        <img 
+                            src="https://api.dicebear.com/7.x/avataaars/svg?seed=Rayhan" 
+                            alt="Rayhan" 
+                            class="w-8 h-8 rounded-full bg-plum-800 border border-pink-400"
+                            loading="lazy"
+                            decoding="async"
+                        >
                         <div>
                             <span class="font-bold text-white block">Rayhan Alfarizi (Kamu)</span>
                             <span class="text-[11px] text-pink-300">11 IPA 2 • 🦅 Garuda Cendekia</span>
@@ -418,7 +475,13 @@
                 <div class="py-3 flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <span class="text-xl">🥉</span>
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aditya" class="w-8 h-8 rounded-full bg-plum-800 border border-slate-700">
+                        <img 
+                            src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aditya" 
+                            alt="Aditya" 
+                            class="w-8 h-8 rounded-full bg-plum-800 border border-slate-700"
+                            loading="lazy"
+                            decoding="async"
+                        >
                         <div>
                             <span class="font-bold text-white block">Aditya Pratama</span>
                             <span class="text-[11px] text-slate-400">10 MIPA 3 • 🌊 Elang Samudra</span>
@@ -457,22 +520,78 @@
         }
     }
 
+    // Paginasi / Load More Interaktif
+    function loadMoreBooks() {
+        document.querySelectorAll('.extra-book').forEach(card => {
+            card.classList.remove('hidden');
+            card.style.display = '';
+        });
+        const container = document.getElementById('loadMoreContainer');
+        if (container) {
+            container.innerHTML = `
+                <span class="text-xs text-pink-300/80 font-bold py-2 inline-flex items-center gap-1.5">
+                    ✨ Semua {{ $allBooks->count() }} koleksi buku ditampilkan
+                </span>
+            `;
+        }
+    }
+
+    // Filter Kategori Dinamis
     function filterCategory(cat, btn) {
+        switchTab('katalog');
+
+        // Jika dipanggil dari card buku (tanpa elemen btn), cari tombol pill yang cocok
+        if (!btn) {
+            document.querySelectorAll('.cat-pill').forEach(b => {
+                if (cat === 'all' && b.textContent.includes('Semua')) {
+                    btn = b;
+                } else if (b.textContent.trim().includes(cat)) {
+                    btn = b;
+                }
+            });
+        }
+
         document.querySelectorAll('.cat-pill').forEach(b => {
             b.classList.remove('bg-gradient-to-r', 'from-pink-500', 'to-rose-500', 'text-white', 'shadow-sm', 'shadow-pink-500/25');
             b.classList.add('bg-plum-900', 'text-slate-300', 'border', 'border-pink-500/20');
         });
-        btn.classList.remove('bg-plum-900', 'text-slate-300', 'border', 'border-pink-500/20');
-        btn.classList.add('bg-gradient-to-r', 'from-pink-500', 'to-rose-500', 'text-white', 'shadow-sm', 'shadow-pink-500/25');
 
+        if (btn) {
+            btn.classList.remove('bg-plum-900', 'text-slate-300', 'border', 'border-pink-500/20');
+            btn.classList.add('bg-gradient-to-r', 'from-pink-500', 'to-rose-500', 'text-white', 'shadow-sm', 'shadow-pink-500/25');
+        }
+
+        let visibleCount = 0;
         document.querySelectorAll('.book-card').forEach(card => {
             const cardCat = card.getAttribute('data-category') || '';
-            if (cat === 'all' || cardCat.includes(cat)) {
+            if (cat === 'all' || cardCat.toLowerCase().includes(cat.toLowerCase())) {
                 card.style.display = '';
+                card.classList.remove('hidden');
+                visibleCount++;
             } else {
                 card.style.display = 'none';
             }
         });
+
+        const emptyState = document.getElementById('noBooksFoundState');
+        if (emptyState) {
+            if (visibleCount === 0) {
+                emptyState.classList.remove('hidden');
+                const qDisplay = document.getElementById('searchQueryDisplay');
+                if (qDisplay) qDisplay.textContent = 'Kategori ' + cat;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+        }
+
+        const loadMore = document.getElementById('loadMoreContainer');
+        if (loadMore) {
+            if (cat !== 'all') {
+                loadMore.classList.add('hidden');
+            } else {
+                loadMore.classList.remove('hidden');
+            }
+        }
     }
 
     let cleanQuiz = { mood: 'santai', interest: 'sejarah', duration: 30 };
@@ -509,7 +628,7 @@
                 card.className = 'p-3 rounded-2xl border border-pink-500/20 bg-plum-900 flex items-center justify-between gap-3';
                 card.innerHTML = `
                     <div class="flex items-center gap-3 min-w-0">
-                        <img src="${b.cover_url}" class="w-10 h-14 rounded-lg object-cover shrink-0">
+                        <img src="${b.cover_url}" alt="${b.title}" class="w-10 h-14 rounded-lg object-cover shrink-0" loading="lazy" decoding="async">
                         <div class="min-w-0">
                             <span class="text-[10px] text-pink-400 font-bold">${b.match_score}% Match</span>
                             <h5 class="text-xs font-bold text-white truncate">${b.title}</h5>

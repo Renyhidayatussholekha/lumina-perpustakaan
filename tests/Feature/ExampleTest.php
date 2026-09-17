@@ -94,4 +94,33 @@ class ExampleTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonStructure(['status', 'character_name', 'reply']);
     }
+
+    /**
+     * Test API Real AI Summarize
+     */
+    public function test_ai_summarize_api(): void
+    {
+        $this->seed(LuminaSeeder::class);
+
+        $response = $this->postJson('/api/ai-summarize', [
+            'book_id' => 1,
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure(['status', 'book_title', 'summary_1', 'summary_2', 'summary_3', 'moral_lesson', 'source']);
+    }
+
+    /**
+     * Test pencarian buku dan filter kategori dinamis
+     */
+    public function test_search_and_category_filtering(): void
+    {
+        $this->seed(LuminaSeeder::class);
+
+        $response = $this->get('/?q=bumi&kategori=Sastra%20%26%20Fiksi');
+
+        $response->assertStatus(200);
+        $response->assertSee('Bumi Manusia');
+    }
 }
+
