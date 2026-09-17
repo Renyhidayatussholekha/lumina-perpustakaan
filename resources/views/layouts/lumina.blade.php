@@ -76,19 +76,19 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col font-sans antialiased selection:bg-pinky-500 selection:text-white pb-20">
+<body class="min-h-screen flex flex-col font-sans antialiased selection:bg-pinky-500 selection:text-white pb-24 sm:pb-16">
 
     <!-- Top Floating Navbar -->
-    <header class="sticky top-0 z-50 bg-plum-950/80 backdrop-blur-xl border-b border-pink-500/10">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+    <header class="sticky top-0 z-50 bg-plum-950/85 backdrop-blur-xl border-b border-pink-500/10">
+        <div class="max-w-6xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2 sm:gap-4">
             
             <!-- Brand Logo -->
-            <div class="flex items-center gap-6">
-                <a href="{{ route('lumina.index') }}" class="flex items-center gap-2.5 group">
+            <div class="flex items-center gap-3 sm:gap-6 shrink-0">
+                <a href="{{ route('lumina.index') }}" class="flex items-center gap-2 group">
                     <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-pink-500 via-rose-500 to-pink-400 flex items-center justify-center text-white text-sm font-black shadow-md shadow-pink-500/30 group-hover:scale-105 transition">
                         🌸
                     </div>
-                    <span class="font-display font-extrabold text-xl tracking-tight text-white group-hover:text-pink-300 transition">Lumina</span>
+                    <span class="font-display font-extrabold text-lg sm:text-xl tracking-tight text-white group-hover:text-pink-300 transition">Lumina</span>
                 </a>
 
                 <!-- Desktop Nav Links -->
@@ -103,12 +103,12 @@
             </div>
 
             <!-- Search Bar & Clean Profile -->
-            <div class="flex items-center gap-3">
-                <div class="relative w-44 sm:w-60">
+            <div class="flex items-center gap-2 sm:gap-3 flex-1 sm:flex-none justify-end">
+                <div class="relative w-full max-w-[170px] sm:max-w-none sm:w-60">
                     <input 
                         type="text" 
                         id="globalSearchInput" 
-                        placeholder="Cari buku kesukaanmu..." 
+                        placeholder="Cari buku..." 
                         class="w-full bg-plum-900 border border-pink-500/20 rounded-full px-3 py-1.5 pl-8 text-xs text-slate-200 placeholder-pink-300/40 focus:outline-none focus:border-pink-400 transition"
                         onkeyup="handleGlobalSearch(event)"
                     >
@@ -116,7 +116,7 @@
                 </div>
 
                 <!-- Clean User Avatar with Level -->
-                <a href="{{ route('lumina.gamification') }}" class="flex items-center gap-2 pl-2 border-l border-white/10 hover:opacity-85 transition" title="Profil Siswa">
+                <a href="{{ route('lumina.gamification') }}" class="flex items-center gap-2 pl-2 border-l border-white/10 hover:opacity-85 transition shrink-0" title="Profil Siswa">
                     <div class="relative">
                         <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Rayhan" alt="Rayhan" class="w-8 h-8 rounded-full bg-plum-850 border border-pink-400/50">
                         <span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-rose-500 text-white font-black text-[9px] rounded-full flex items-center justify-center shadow">5</span>
@@ -128,13 +128,33 @@
     </header>
 
     <!-- Main Content -->
-    <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 py-6 w-full">
+    <main class="flex-grow max-w-6xl mx-auto px-3 sm:px-6 py-5 sm:py-6 w-full">
         @yield('content')
     </main>
 
-    <!-- Floating Audio Player Bar (Pinky Sleek) -->
-    <div id="globalAudioPlayer" class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[92%] max-w-xl z-50 hidden transition-all duration-300">
-        <div class="bg-plum-900/95 backdrop-blur-xl border border-pink-500/30 rounded-2xl p-3.5 shadow-2xl shadow-pink-950/60 flex items-center justify-between gap-3 text-white">
+    <!-- Mobile Bottom App Dock Navigation (Sleek Spotify-style dock for phones) -->
+    <nav class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-plum-950/95 backdrop-blur-2xl border-t border-pink-500/20 px-2 py-1.5 flex items-center justify-around shadow-2xl">
+        <a href="{{ route('lumina.index') }}" onclick="if(window.location.pathname === '/') { switchTab('katalog'); return false; }" class="flex flex-col items-center gap-0.5 text-slate-300 hover:text-pink-300 transition text-[10px] font-semibold py-1 px-3">
+            <span class="text-base">📚</span>
+            <span>Rak Buku</span>
+        </a>
+        <button onclick="if(window.location.pathname === '/') { switchTab('ai'); } else { window.location.href = '{{ route('lumina.index') }}#ai'; }" class="flex flex-col items-center gap-0.5 text-slate-300 hover:text-pink-300 transition text-[10px] font-semibold py-1 px-3">
+            <span class="text-base">🤖</span>
+            <span>Fitur AI</span>
+        </button>
+        <button onclick="if(window.location.pathname === '/') { switchTab('fraksi'); } else { window.location.href = '{{ route('lumina.index') }}#fraksi'; }" class="flex flex-col items-center gap-0.5 text-slate-300 hover:text-pink-300 transition text-[10px] font-semibold py-1 px-3">
+            <span class="text-base">🏆</span>
+            <span>Fraksi</span>
+        </button>
+        <a href="{{ route('lumina.gamification') }}" class="flex flex-col items-center gap-0.5 {{ request()->routeIs('lumina.gamification') ? 'text-pink-400 font-bold' : 'text-slate-300 hover:text-pink-300' }} transition text-[10px] font-semibold py-1 px-3">
+            <span class="text-base">👑</span>
+            <span>Profil XP</span>
+        </a>
+    </nav>
+
+    <!-- Floating Audio Player Bar (Pinky Sleek - Positioned above mobile dock) -->
+    <div id="globalAudioPlayer" class="fixed bottom-20 sm:bottom-4 left-1/2 -translate-x-1/2 w-[94%] max-w-xl z-50 hidden transition-all duration-300">
+        <div class="bg-plum-900/95 backdrop-blur-xl border border-pink-500/30 rounded-2xl p-3 sm:p-3.5 shadow-2xl shadow-pink-950/60 flex items-center justify-between gap-3 text-white">
             <div class="flex items-center gap-3 min-w-0">
                 <img id="audioPlayerCover" src="" class="w-10 h-10 rounded-lg object-cover bg-plum-800 shrink-0 border border-pink-400/30">
                 <div class="min-w-0">
@@ -144,11 +164,11 @@
             </div>
 
             <!-- Controls -->
-            <div class="flex items-center gap-2 shrink-0">
+            <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 <button onclick="cycleAudioSpeed()" id="audioSpeedBtn" class="px-2 py-1 rounded bg-plum-800 text-[10px] font-bold text-pink-300 hover:bg-plum-700 transition">
                     1.0x
                 </button>
-                <button onclick="toggleAudioSpeech()" class="w-9 h-9 rounded-full bg-gradient-to-tr from-pink-500 to-rose-500 text-white flex items-center justify-center font-bold text-sm shadow hover:scale-105 transition">
+                <button onclick="toggleAudioSpeech()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-tr from-pink-500 to-rose-500 text-white flex items-center justify-center font-bold text-xs sm:text-sm shadow hover:scale-105 transition">
                     <span id="audioPlayIcon">▶</span>
                 </button>
                 <button onclick="closeAudioPlayer()" class="text-pink-300/60 hover:text-white p-1 text-xs transition">

@@ -6,16 +6,27 @@
 <div class="space-y-10">
 
     <!-- ==================================================== -->
-    <!-- 1. CINEMATIC HERO SPOTLIGHT (MIDNIGHT ROSE STREAMING)-->
+    <!-- 1. CINEMATIC HERO SPOTLIGHT (RESPONSIVE STREAMING)   -->
     <!-- ==================================================== -->
-    <div class="relative rounded-3xl overflow-hidden border border-pink-500/20 bg-gradient-to-br from-plum-900 via-plum-850 to-plum-950 p-6 sm:p-10 shadow-2xl">
+    <div class="relative rounded-3xl overflow-hidden border border-pink-500/20 bg-gradient-to-br from-plum-900 via-plum-850 to-plum-950 p-5 sm:p-10 shadow-2xl">
         <!-- Soft Pink Ambient Glow behind featured cover -->
         <div class="absolute -right-10 -top-10 w-96 h-96 bg-pink-500/15 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -left-10 -bottom-10 w-80 h-80 bg-rose-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
+            <!-- Mobile Featured Cover (visible on phone, hidden on desktop) -->
+            <div class="relative shrink-0 md:hidden group mx-auto">
+                <div class="absolute -inset-2 bg-gradient-to-tr from-pink-500/30 to-rose-500/30 rounded-2xl blur-lg transition duration-500"></div>
+                <div class="relative w-36 aspect-[3/4] rounded-2xl overflow-hidden border border-pink-400/30 cover-shadow">
+                    <img src="{{ $featuredBook->cover_url }}" alt="{{ $featuredBook->title }}" class="w-full h-full object-cover">
+                    <div class="absolute top-2 right-2 bg-plum-950/85 backdrop-blur px-2 py-0.5 rounded-full text-[10px] font-bold text-amber-400 border border-amber-400/30">
+                        ★ {{ $featuredBook->rating }}
+                    </div>
+                </div>
+            </div>
+
             <!-- Left Info -->
-            <div class="max-w-xl space-y-4 text-left">
+            <div class="max-w-xl space-y-3 sm:space-y-4 text-left">
                 <div class="flex items-center gap-2">
                     <span class="px-3 py-1 rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/30 text-xs font-bold font-mono uppercase tracking-wider flex items-center gap-1.5 shadow-sm shadow-pink-500/10">
                         <span class="w-2 h-2 rounded-full bg-pink-400 animate-pulse"></span>
@@ -24,7 +35,7 @@
                     <span class="text-xs text-pink-200/60">{{ $featuredBook->category }}</span>
                 </div>
 
-                <h1 class="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-tight">
+                <h1 class="font-display font-extrabold text-2xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-tight">
                     {{ $featuredBook->title }}
                 </h1>
 
@@ -33,12 +44,12 @@
                 </p>
 
                 <!-- 3 Bite-Sized AI Bullet Points (Highlighted) -->
-                <div class="p-3.5 rounded-2xl bg-plum-950/70 border border-pink-500/20 space-y-1.5 text-xs text-slate-200">
+                <div class="p-3 sm:p-3.5 rounded-2xl bg-plum-950/70 border border-pink-500/20 space-y-1.5 text-xs text-slate-200">
                     <span class="font-bold text-pink-300 text-[11px] block uppercase tracking-wide">💡 Rangkuman AI Lumina:</span>
                     <p class="italic text-pink-100/90">"{{ $featuredBook->ai_summary_1 }}"</p>
                 </div>
 
-                <div class="flex items-center gap-3 text-xs text-slate-400 pt-1">
+                <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-slate-400 pt-1">
                     <span class="text-amber-400 font-bold flex items-center gap-1">★ {{ $featuredBook->rating }}</span>
                     <span>•</span>
                     <span>Oleh <strong class="text-pink-200">{{ $featuredBook->author }}</strong></span>
@@ -47,27 +58,27 @@
                 </div>
 
                 <!-- 2 Cute & High-Contrast Action Buttons -->
-                <div class="flex flex-wrap items-center gap-3 pt-2">
-                    <a href="{{ route('lumina.reader', $featuredBook->id) }}" class="bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 hover:from-pink-400 hover:to-rose-400 text-white font-extrabold px-6 py-3 rounded-xl text-xs sm:text-sm shadow-lg shadow-pink-500/30 flex items-center gap-2 transition hover:scale-105 active:scale-95">
+                <div class="flex flex-wrap items-center gap-2 sm:gap-3 pt-2">
+                    <a href="{{ route('lumina.reader', $featuredBook->id) }}" class="flex-1 sm:flex-initial justify-center bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 hover:from-pink-400 hover:to-rose-400 text-white font-extrabold px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm shadow-lg shadow-pink-500/30 flex items-center gap-2 transition hover:scale-105 active:scale-95 text-center">
                         <span>▶</span>
                         <span>Mulai Baca</span>
                     </a>
 
                     <button 
                         onclick="startAudiobook('{{ addslashes($featuredBook->title) }}', '{{ addslashes($featuredBook->author) }}', '{{ $featuredBook->cover_url }}', '{{ addslashes($featuredBook->audio_text) }}')" 
-                        class="bg-white/10 hover:bg-white/15 text-pink-200 hover:text-white font-bold px-5 py-3 rounded-xl text-xs sm:text-sm border border-pink-400/20 flex items-center gap-2 transition hover:scale-105 active:scale-95"
+                        class="flex-1 sm:flex-initial justify-center bg-white/10 hover:bg-white/15 text-pink-200 hover:text-white font-bold px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm border border-pink-400/20 flex items-center gap-2 transition hover:scale-105 active:scale-95 text-center"
                     >
                         <span>🎧</span>
                         <span>Dengar Audio</span>
                     </button>
 
-                    <a href="{{ route('lumina.book', $featuredBook->id) }}" class="text-xs text-pink-300/70 hover:text-pink-200 px-2 py-3 transition">
+                    <a href="{{ route('lumina.book', $featuredBook->id) }}" class="w-full sm:w-auto text-center text-xs text-pink-300/70 hover:text-pink-200 px-2 py-2 transition">
                         Detail Lengkap →
                     </a>
                 </div>
             </div>
 
-            <!-- Right 3D Book Cover Presentation -->
+            <!-- Right 3D Book Cover Presentation (Desktop) -->
             <div class="relative shrink-0 hidden md:block group">
                 <div class="absolute -inset-2 bg-gradient-to-tr from-pink-500/30 to-rose-500/30 rounded-2xl blur-xl group-hover:blur-2xl transition duration-500"></div>
                 <div class="relative w-48 lg:w-56 aspect-[3/4] rounded-2xl overflow-hidden border border-pink-400/30 cover-shadow transform group-hover:-translate-y-2 transition duration-300">
@@ -81,21 +92,21 @@
     </div>
 
     <!-- ==================================================== -->
-    <!-- 2. SLEEK 3-TAB NAVIGATOR (PINKY STREAMING STYLE)     -->
+    <!-- 2. SLEEK 3-TAB NAVIGATOR (RESPONSIVE MOBILE & LAPTOP) -->
     <!-- ==================================================== -->
-    <div class="flex items-center justify-between border-b border-pink-500/10 pb-4">
-        <div class="flex items-center gap-2 p-1 rounded-2xl bg-plum-900 border border-pink-500/20">
-            <button onclick="switchTab('katalog')" id="tabBtn-katalog" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-md shadow-pink-500/30 flex items-center gap-2">
+    <div class="flex items-center justify-between border-b border-pink-500/10 pb-3 sm:pb-4">
+        <div class="w-full sm:w-auto grid grid-cols-3 sm:flex items-center gap-1 sm:gap-2 p-1 rounded-2xl bg-plum-900 border border-pink-500/20">
+            <button onclick="switchTab('katalog')" id="tabBtn-katalog" class="tab-btn px-2 sm:px-4 py-2 rounded-xl text-[11px] sm:text-sm font-bold transition bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-md shadow-pink-500/30 flex items-center justify-center gap-1 sm:gap-2">
                 <span>📚</span>
-                <span>Rak Buku</span>
+                <span class="truncate">Rak Buku</span>
             </button>
-            <button onclick="switchTab('ai')" id="tabBtn-ai" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition text-slate-400 hover:text-pink-200 hover:bg-white/5 flex items-center gap-2">
+            <button onclick="switchTab('ai')" id="tabBtn-ai" class="tab-btn px-2 sm:px-4 py-2 rounded-xl text-[11px] sm:text-sm font-semibold transition text-slate-400 hover:text-pink-200 hover:bg-white/5 flex items-center justify-center gap-1 sm:gap-2">
                 <span>🤖</span>
-                <span>Fitur AI & Tokoh</span>
+                <span class="truncate">AI & Tokoh</span>
             </button>
-            <button onclick="switchTab('fraksi')" id="tabBtn-fraksi" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition text-slate-400 hover:text-pink-200 hover:bg-white/5 flex items-center gap-2">
+            <button onclick="switchTab('fraksi')" id="tabBtn-fraksi" class="tab-btn px-2 sm:px-4 py-2 rounded-xl text-[11px] sm:text-sm font-semibold transition text-slate-400 hover:text-pink-200 hover:bg-white/5 flex items-center justify-center gap-1 sm:gap-2">
                 <span>🏆</span>
-                <span>Piala Fraksi</span>
+                <span class="truncate">Fraksi</span>
             </button>
         </div>
 
@@ -132,11 +143,11 @@
             </button>
         </div>
 
-        <!-- 4-Column Book Grid with Visual Depth -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5" id="booksGrid">
+        <!-- 4-Column Book Grid with Visual Depth (Responsive 2-col on mobile, 3-col on tablet, 4-col on laptop) -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5" id="booksGrid">
             @foreach($allBooks as $book)
             <div 
-                class="book-card group cursor-pointer flex flex-col justify-between p-3 rounded-2xl glass-card border border-pink-500/15 hover:border-pink-400/60"
+                class="book-card group cursor-pointer flex flex-col justify-between p-2.5 sm:p-3 rounded-2xl glass-card border border-pink-500/15 hover:border-pink-400/60"
                 data-title="{{ $book->title }}"
                 data-author="{{ $book->author }}"
                 data-category="{{ $book->category }}"
@@ -156,18 +167,18 @@
                     </div>
 
                     <!-- Clean Typography -->
-                    <div class="pt-3 space-y-1 text-left">
+                    <div class="pt-2.5 sm:pt-3 space-y-1 text-left">
                         <span class="text-[10px] font-bold uppercase tracking-wider text-pink-400 block line-clamp-1">{{ $book->category }}</span>
-                        <h4 class="font-display font-bold text-sm text-white group-hover:text-pink-300 transition line-clamp-1 leading-snug">
+                        <h4 class="font-display font-bold text-xs sm:text-sm text-white group-hover:text-pink-300 transition line-clamp-1 leading-snug">
                             {{ $book->title }}
                         </h4>
-                        <p class="text-xs text-slate-400 truncate">{{ $book->author }}</p>
+                        <p class="text-[11px] sm:text-xs text-slate-400 truncate">{{ $book->author }}</p>
                     </div>
                 </a>
 
                 <!-- Quick Action Bar -->
-                <div class="flex items-center gap-2 pt-3 mt-2 border-t border-white/5">
-                    <a href="{{ route('lumina.reader', $book->id) }}" class="flex-1 py-2 rounded-xl bg-white/10 hover:bg-pink-500 hover:text-white text-pink-100 text-xs font-bold text-center transition">
+                <div class="flex items-center gap-1.5 sm:gap-2 pt-2 sm:pt-3 mt-2 border-t border-white/5">
+                    <a href="{{ route('lumina.reader', $book->id) }}" class="flex-1 py-1.5 sm:py-2 rounded-xl bg-white/10 hover:bg-pink-500 hover:text-white text-pink-100 text-xs font-bold text-center transition">
                         Baca
                     </a>
                     <button 
