@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="dark" id="readerHtml">
+<html lang="id" class="light" id="readerHtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +13,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -28,36 +27,36 @@
 
     <style>
         /* Themes */
-        .theme-dark {
-            --bg-page: #070a12;
-            --bg-nav: rgba(10, 15, 29, 0.9);
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
-            --border-color: #1e293b;
+        .theme-light {
+            --bg-page: #ffffff;
+            --bg-nav: rgba(255, 255, 255, 0.95);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
         }
         .theme-sepia {
             --bg-page: #fbf0d9;
-            --bg-nav: rgba(245, 230, 203, 0.9);
+            --bg-nav: rgba(245, 230, 203, 0.95);
             --text-main: #3d3023;
             --text-muted: #796652;
             --border-color: #e6d5be;
         }
-        .theme-light {
-            --bg-page: #ffffff;
-            --bg-nav: rgba(248, 250, 252, 0.9);
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
+        .theme-dark {
+            --bg-page: #0f172a;
+            --bg-nav: rgba(15, 23, 42, 0.95);
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
         }
 
         body {
             background-color: var(--bg-page);
             color: var(--text-main);
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
     </style>
 </head>
-<body class="theme-dark min-h-screen font-sans">
+<body class="theme-light min-h-screen font-sans">
 
     <!-- Top Reading Toolbar (Sticky) -->
     <header class="sticky top-0 z-40 backdrop-blur-xl border-b transition-colors" style="background-color: var(--bg-nav); border-color: var(--border-color);">

@@ -20,7 +20,7 @@ class ExampleTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
-        $response->assertSee('LUMINA');
+        $response->assertSee('Lumina');
     }
 
     /**
@@ -33,7 +33,7 @@ class ExampleTest extends TestCase
         $response = $this->get('/buku/1');
 
         $response->assertStatus(200);
-        $response->assertSee('Bite-Sized Info');
+        $response->assertSee('Rangkuman AI Lumina');
     }
 
     /**
@@ -59,7 +59,7 @@ class ExampleTest extends TestCase
         $response = $this->get('/gamifikasi');
 
         $response->assertStatus(200);
-        $response->assertSee('Ruang Gamifikasi');
+        $response->assertSee('Fraksi');
     }
 
     /**
