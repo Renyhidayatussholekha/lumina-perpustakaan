@@ -132,80 +132,48 @@
             
             <!-- Brand Logo -->
             <div class="flex items-center gap-8">
-                <a href="{{ route('lumina.index') }}" class="flex items-center gap-3 group">
-                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-400 via-cyan-500 to-lumina-purple p-0.5 shadow-glow-cyan flex items-center justify-center group-hover:scale-105 transition-transform">
-                        <div class="w-full h-full bg-navy-950 rounded-[10px] flex items-center justify-center">
-                            <span class="text-2xl">✨</span>
-                        </div>
+                <a href="{{ route('lumina.index') }}" class="flex items-center gap-2.5 group">
+                    <div class="w-9 h-9 rounded-xl bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-lg group-hover:scale-105 transition">
+                        ✨
                     </div>
-                    <div>
-                        <div class="flex items-center gap-1.5">
-                            <span class="font-display font-extrabold text-2xl tracking-tight text-gradient-cyan">LUMINA</span>
-                            <span class="px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded-full">AI Library</span>
-                        </div>
-                        <p class="text-[11px] text-slate-400 font-medium tracking-wide">Smart School Digital Library</p>
-                    </div>
+                    <span class="font-display font-extrabold text-xl tracking-tight text-white group-hover:text-cyan-400 transition">LUMINA</span>
                 </a>
 
-                <!-- Desktop Nav Links -->
-                <nav class="hidden md:flex items-center gap-1 text-sm font-semibold">
-                    <a href="{{ route('lumina.index') }}" class="px-3.5 py-2 rounded-lg transition-colors {{ request()->routeIs('lumina.index') ? 'text-cyan-400 bg-cyan-500/10' : 'text-slate-300 hover:text-white hover:bg-white/5' }}">
-                        Beranda
+                <!-- Desktop Nav Links (Clean & Simple) -->
+                <nav class="hidden md:flex items-center gap-2 text-sm">
+                    <a href="{{ route('lumina.index') }}" class="px-3 py-1.5 rounded-lg transition {{ request()->routeIs('lumina.index') ? 'text-white font-bold bg-white/10' : 'text-slate-400 hover:text-white' }}">
+                        Katalog
                     </a>
-                    <button onclick="openMatchmakerModal()" class="px-3.5 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors flex items-center gap-1.5">
-                        <span>🎯 AI Matchmaker</span>
-                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                    <button onclick="openMatchmakerModal()" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">
+                        Kuis Minat AI
                     </button>
-                    <button onclick="openRoleplayModal(1)" class="px-3.5 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors flex items-center gap-1.5">
-                        <span>🎙️ Tanya Tokoh</span>
-                        <span class="px-1.5 py-0.2 text-[9px] bg-lumina-purple/30 text-purple-300 rounded font-mono">Roleplay</span>
+                    <button onclick="openRoleplayModal(1)" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">
+                        Tanya Tokoh
                     </button>
-                    <a href="{{ route('lumina.gamification') }}" class="px-3.5 py-2 rounded-lg transition-colors {{ request()->routeIs('lumina.gamification') ? 'text-cyan-400 bg-cyan-500/10' : 'text-slate-300 hover:text-white hover:bg-white/5' }} flex items-center gap-1.5">
-                        <span>🏆 Fraksi & Piala</span>
-                        <span class="px-1.5 py-0.2 text-[9px] bg-amber-500/30 text-amber-300 rounded font-mono">Live</span>
+                    <a href="{{ route('lumina.gamification') }}" class="px-3 py-1.5 rounded-lg transition {{ request()->routeIs('lumina.gamification') ? 'text-white font-bold bg-white/10' : 'text-slate-400 hover:text-white' }}">
+                        Fraksi & Peringkat
                     </a>
                 </nav>
             </div>
 
-            <!-- Search Bar & User Gamification Profile -->
-            <div class="flex items-center gap-4">
+            <!-- Search & Simple Profile -->
+            <div class="flex items-center gap-3">
                 <!-- Search Input -->
-                <div class="relative hidden sm:block w-64 lg:w-72">
+                <div class="relative hidden sm:block w-56 lg:w-64">
                     <input 
                         type="text" 
                         id="globalSearchInput" 
-                        placeholder="Cari buku, pengarang, tokoh..."
-                        class="w-full bg-navy-900/80 border border-slate-700/60 rounded-full px-4 py-2 pl-10 text-xs text-slate-200 placeholder-slate-400 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition"
+                        placeholder="Cari judul atau pengarang..."
+                        class="w-full bg-navy-900 border border-slate-800 rounded-full px-4 py-1.5 pl-9 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition"
                         onkeyup="handleGlobalSearch(event)"
                     >
-                    <span class="absolute left-3.5 top-2.5 text-slate-400 text-xs">🔍</span>
+                    <span class="absolute left-3 top-2 text-slate-500 text-xs">🔍</span>
                 </div>
 
-                <!-- Quick AI Matchmaker Button -->
-                <button onclick="openMatchmakerModal()" class="hidden sm:flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-navy-950 font-bold px-3.5 py-2 rounded-full text-xs shadow-glow-cyan transition-all hover:scale-105 active:scale-95">
-                    <span>✨ Kuis Minat</span>
-                </button>
-
-                <!-- Student Gamification Avatar & Level -->
-                <a href="{{ route('lumina.gamification') }}" class="flex items-center gap-3 pl-2 sm:pl-3 border-l border-slate-800 hover:opacity-95 transition group" title="Lihat Profil & Lencana">
-                    <div class="relative flex items-center justify-center">
-                        <!-- Circular XP Ring SVG -->
-                        <svg class="w-11 h-11 transform -rotate-90">
-                            <circle cx="22" cy="22" r="18" stroke="#1e294f" stroke-width="3" fill="transparent"/>
-                            <circle cx="22" cy="22" r="18" stroke="#06b6d4" stroke-width="3" stroke-dasharray="113" stroke-dashoffset="31" stroke-linecap="round" fill="transparent"/>
-                        </svg>
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Rayhan" alt="Rayhan" class="w-8 h-8 rounded-full absolute object-cover bg-navy-800">
-                        <span class="absolute -bottom-1 -right-1 bg-amber-500 text-navy-950 text-[9px] font-black px-1.5 py-0.2 rounded-full border border-navy-950 shadow">
-                            Lv.5
-                        </span>
-                    </div>
-                    <div class="hidden lg:block text-left">
-                        <div class="flex items-center gap-1.5">
-                            <span class="text-xs font-bold text-slate-100 group-hover:text-cyan-400 transition">Rayhan</span>
-                            <span class="text-xs">🦅</span>
-                        </div>
-                        <span class="text-[10px] text-cyan-400 font-semibold block">1.450 / 2.000 XP</span>
-                    </div>
+                <!-- Clean User Avatar -->
+                <a href="{{ route('lumina.gamification') }}" class="flex items-center gap-2.5 p-1 rounded-full hover:bg-white/5 transition" title="Lihat Profil & Level">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Rayhan" alt="Rayhan" class="w-8 h-8 rounded-full bg-navy-800 border border-slate-700">
+                    <span class="text-xs font-semibold text-slate-300 hidden lg:inline">Rayhan</span>
                 </a>
             </div>
         </div>
